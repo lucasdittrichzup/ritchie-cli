@@ -122,7 +122,7 @@ func TestWorkspaceManager_Add(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			in := tt.in
 
-			workspace := New(tmpDir, in.fileManager)
+			workspace := New(tmpDir, tmpDir, in.fileManager)
 			got := workspace.Add(in.workspace)
 
 			if got != nil && got.Error() != tt.out.Error() {
@@ -159,7 +159,7 @@ func TestManager_List(t *testing.T) {
 				fileManager: fileManager,
 			},
 			out: out{
-				listSize: 1,
+				listSize: 2,
 				error:    nil,
 			},
 		},
@@ -207,7 +207,7 @@ func TestManager_List(t *testing.T) {
 				_ = fileManager.Write(workspaceFile, content)
 			}
 
-			workspace := New(tmpDir, in.fileManager)
+			workspace := New(tmpDir, tmpDir, in.fileManager)
 			got, err := workspace.List()
 
 			if err != nil && err.Error() != out.error.Error() {
@@ -270,8 +270,8 @@ func TestValidate(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			in := tt.in
 
-			workspace := New(tmpDir, in.fileManager)
-			got := workspace.Validate(in.workspace)
+			workspace := New(tmpDir, tmpDir, in.fileManager)
+			got := workspace.Add(in.workspace)
 
 			if got != nil && got.Error() != tt.out.Error() {
 				t.Errorf("Validate(%s) got %v, out %v", tt.name, got, tt.out)
